@@ -1,23 +1,19 @@
-# Stage 1: Build the app
+# Build stage
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 
-# Copy project files
+# Copy project file first for efficient caching
 COPY Tarea3/Tarea3/Tarea3.csproj .
+RUN dotnet restore
+
+# Copy remaining files
 COPY Tarea3/Tarea3/ .
 
-# Restore dependencies and publish
-RUN dotnet restore
+# Publish the app
 RUN dotnet publish -c Release -o /app
 
-# Stage 2: Run the app
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
+# Runtime stage
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
 COPY --from=build /app .
-
-# Expose port 80 (HTTP) and 443 (HTTPS)
-EXPOSE 80
-EXPOSE 443
-
-# Start the app
 ENTRYPOINT ["dotnet", "Tarea3.dll"]
