@@ -1,16 +1,21 @@
 using Microsoft.Data.SqlClient;
 using System.Data;
 using Tarea2.Modelos;
+using Microsoft.Extensions.Configuration;
 
 public class AccesarBD
 {
-    public static int InsertarEmpleado(string puesto, string ValorDocumentoIdentidad, string nombre, DateTime fechaContratacion, int saldoVacaciones, bool esActivo)
+    private readonly IConfiguration _config;
+
+    public AccesarBD(IConfiguration config)
+    {
+        _config = config;
+    }
+    public int InsertarEmpleado(string puesto, string ValorDocumentoIdentidad, string nombre, DateTime fechaContratacion, int saldoVacaciones, bool esActivo)
     {
         //String de conexión a BD
-        string StringConexion = "Server=25.55.61.33;" +
-            "Database=Tarea2;" +
-            "Trusted_Connection=True;" +
-            "TrustServerCertificate=True;";
+        string StringConexion = _config.GetConnectionString("DefaultConnection");
+
 
         try
         {
@@ -107,7 +112,7 @@ public class AccesarBD
         }
     }
 
-    public static int ContarLoginsFallidos(
+    public int ContarLoginsFallidos(
     string username,
     string password,
     string ipAddress,
@@ -116,10 +121,9 @@ public class AccesarBD
     out int outCodigoError)
     {
         // String de conexión a BD
-        string StringConexion = "Server=25.55.61.33;" +
-            "Database=Tarea2;" +
-            "Trusted_Connection=True;" +
-            "TrustServerCertificate=True;";
+        string StringConexion = _config.GetConnectionString("DefaultConnection");
+
+        
 
         // Inicializar parámetros de salida
         outConteo = 0;
@@ -182,16 +186,14 @@ public class AccesarBD
     }
 
 
-    public static int ManejarError(
+    public int ManejarError(
     int codigoError,
     out string outDescripcion,
     out int outCodigoError)
     {
         // String de conexión a BD
-        string StringConexion = "Server=25.55.61.33;" +
-            "Database=Tarea2;" +
-            "Trusted_Connection=True;" +
-            "TrustServerCertificate=True;";
+        string StringConexion = _config.GetConnectionString("DefaultConnection");
+  
 
         // Inicializar parámetros de salida
         outDescripcion = string.Empty;
@@ -244,16 +246,14 @@ public class AccesarBD
         }
     }
 
-    public static int VerificarDeshabilitado(
+    public int VerificarDeshabilitado(
     string username,
     out bool outDeshabilitado,
     out int outCodigoError)
     {
         // String de conexión a BD
-        string StringConexion = "Server=25.55.61.33;" +
-            "Database=Tarea2;" +
-            "Trusted_Connection=True;" +
-            "TrustServerCertificate=True;";
+        string StringConexion = _config.GetConnectionString("DefaultConnection");
+
 
         // Inicializar parámetros de salida
         outDeshabilitado = false;
@@ -306,13 +306,11 @@ public class AccesarBD
     }
 
 
-    public static int InsertarBitacora(int idTipoEvento, string Descripcion, int idPostByUser, string PostInIp, DateTime PostTime)
+    public int InsertarBitacora(int idTipoEvento, string Descripcion, int idPostByUser, string PostInIp, DateTime PostTime)
     {
         //String de conexión a BD
-        string StringConexion = "Server=25.55.61.33;" +
-            "Database=Tarea2;" +
-            "Trusted_Connection=True;" +
-            "TrustServerCertificate=True;";
+        string StringConexion = _config.GetConnectionString("DefaultConnection");
+
 
         try
         {
@@ -359,13 +357,11 @@ public class AccesarBD
 
 
 
-    public static int UpdateEmpleado(int id, string puesto, string ValorDocumentoIdentidad, string nombre)
+    public int UpdateEmpleado(int id, string puesto, string ValorDocumentoIdentidad, string nombre)
     {
         //String de conexión a BD
-        string StringConexion = "Server=25.55.61.33;" +
-            "Database=Tarea2;" +
-            "Trusted_Connection=True;" +
-            "TrustServerCertificate=True;";
+        string StringConexion = _config.GetConnectionString("DefaultConnection");
+
 
         try
         {
@@ -410,13 +406,11 @@ public class AccesarBD
     }
 
 
-    public static int DeleteEmpleado(int id)
+    public int DeleteEmpleado(int id)
     {
         //String de conexión a BD
-        string StringConexion = "Server=25.55.61.33;" +
-            "Database=Tarea2;" +
-            "Trusted_Connection=True;" +
-            "TrustServerCertificate=True;";
+        string StringConexion = _config.GetConnectionString("DefaultConnection");
+
 
         try
         {
@@ -457,12 +451,10 @@ public class AccesarBD
         }
     }
 
-    public static List<Empleado> MostrarEmpleados()
+    public List<Empleado> MostrarEmpleados()
     {
-        string StringConexion = "Server=25.55.61.33;" +
-            "Database=Tarea2;" +
-            "Trusted_Connection=True;" +
-            "TrustServerCertificate=True;";
+        string StringConexion = _config.GetConnectionString("DefaultConnection");
+
 
         // Crea una lista de empleados vacía
         List<Empleado> empleados = new List<Empleado>();
@@ -519,7 +511,7 @@ public class AccesarBD
         return empleados.OrderBy(e => e.Nombre).ToList(); //Orden ascendente por nombre
     }
 
-    public static List<Movimiento> MostrarMovimientos(int idEmpleado)
+    public List<Movimiento> MostrarMovimientos(int idEmpleado)
     {
         string connectionString = "Server=25.55.61.33;Database=Tarea2;Trusted_Connection=True;TrustServerCertificate=True;";
         List<Movimiento> movimientos = new List<Movimiento>();
@@ -574,12 +566,10 @@ public class AccesarBD
 
         return movimientos.OrderByDescending(m => m.Fecha).ToList();
     }
-    public static int CargarDatos()
+    public int CargarDatos()
     {
-        string StringConexion = "Server=25.55.61.33;" +
-            "Database=Tarea2;" +
-            "Trusted_Connection=True;" +
-            "TrustServerCertificate=True;";
+        string StringConexion = _config.GetConnectionString("DefaultConnection");
+
 
         try
         {
@@ -610,7 +600,7 @@ public class AccesarBD
     }
 
 
-    public static List<Empleado> FiltrarEmpleados(string inBusqueda, int inTipo)
+    public List<Empleado> FiltrarEmpleados(string inBusqueda, int inTipo)
     {
         string StringConexion = "Server=25.55.61.33;Database=Tarea2;Trusted_Connection=True;TrustServerCertificate=True;";
         List<Empleado> empleados = new List<Empleado>();
@@ -668,12 +658,10 @@ public class AccesarBD
 
 
 
-    public static List<Puesto> MostrarPuestos()
+    public List<Puesto> MostrarPuestos()
     {
-        string StringConexion = "Server=25.55.61.33;" +
-            "Database=Tarea2;" +
-            "Trusted_Connection=True;" +
-            "TrustServerCertificate=True;";
+        string StringConexion = _config.GetConnectionString("DefaultConnection");
+
 
         // Crea una lista de Puestos vacía
         List<Puesto> Puestos = new List<Puesto>();
@@ -728,12 +716,10 @@ public class AccesarBD
 
 
 
-    public static List<Usuario> MostrarUsuarios()
+    public List<Usuario> MostrarUsuarios()
     {
-        string StringConexion = "Server=25.55.61.33;" +
-            "Database=Tarea2;" +
-            "Trusted_Connection=True;" +
-            "TrustServerCertificate=True;";
+        string StringConexion = _config.GetConnectionString("DefaultConnection");
+
 
         // Crea una lista de Usuarios vacía
         List<Usuario> Usuarios = new List<Usuario>();
