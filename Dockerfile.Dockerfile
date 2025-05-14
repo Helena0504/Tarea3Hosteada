@@ -13,7 +13,7 @@ COPY Tarea3/Tarea3/ .
 RUN dotnet publish -c Release -o /app
 
 # Runtime stage
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app .
 ENTRYPOINT ["dotnet", "Tarea3.dll"]
